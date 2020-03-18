@@ -2,22 +2,24 @@ package data
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 
+	"github.com/Tnze/CoolQ-Golang-SDK/cqp"
 	"github.com/google/uuid"
 )
 
 type hitokoto struct {
-	id         int32
-	hitokoto   string
-	kind       string
-	from       string
-	fromWho    string
-	creator    string
-	creatorUID int32
-	reviewer   int32
-	uuid       uuid.UUID
-	createdAt  int64
+	ID         int32     `json:"id"`
+	Hitokoto   string    `json:"hitokoto"`
+	Kind       string    `json:"type"`
+	From       string    `json:"from"`
+	FromWho    string    `json:"from_who"`
+	Creator    string    `json:"creator"`
+	CreatorUID int32     `json:"creator_uid"`
+	Reviewer   int32     `json:"reviewer"`
+	UUID       uuid.UUID `json:"uuid"`
+	CreatedAt  string    `json:"created_at"`
 }
 
 type source interface {
@@ -32,7 +34,8 @@ func addHTTPSource(name, url string) error {
 		return errors.New("Source" + name + "has existed")
 	}
 	var httpSource = httpSource{
-		url: url,
+		name: name,
+		url:  url,
 	}
 	sourceList = append(sourceList, &httpSource)
 	return nil
@@ -46,10 +49,10 @@ func ValidateType(kind string) bool {
 //AddSource 添加源
 func AddSource(name, sourceType, source string) error {
 	switch sourceType {
-	case "http":
+	case "HTTP":
 		addHTTPSource(name, source)
-	case "json":
-	case "sqlite":
+	case "JSON":
+	case "SQLITE":
 	default:
 		return errors.New("No such sourceType")
 	}
@@ -86,5 +89,6 @@ func IsSourceExist(name string) bool {
 
 //RandSourceName 返回随机一个源的名称
 func RandSourceName() string {
+	cqp.AddLog(cqp.Info, "test", fmt.Sprintf("%d", (len(sourceList))))
 	return sourceList[rand.Intn(len(sourceList))].getName()
 }

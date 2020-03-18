@@ -10,10 +10,10 @@ import (
 )
 
 //go:generate cqcfg -c .
-// cqp: 名称: Hitokoto
+// cqp: 名称: 一言Hitokoto
 // cqp: 版本: 1.0.0:0
 // cqp: 作者: BaiMeow
-// cqp: 简介: 群一言
+// cqp: 简介: 一言
 func main() { /*此处应当留空*/ }
 
 func init() {
@@ -23,7 +23,10 @@ func init() {
 }
 
 func onEnable() int32 {
-	config.Load(filepath.Join(cqp.GetAppDir(), "conf.json"))
+	err := config.Load(filepath.Join(cqp.GetAppDir(), "conf.json"))
+	if err != nil {
+		cqp.AddLog(cqp.Error, "一言", err.Error())
+	}
 	return 0
 }
 

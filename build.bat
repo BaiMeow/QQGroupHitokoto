@@ -1,6 +1,6 @@
 @echo off
 
-SET DevDir=F:\CoolQ Pro\dev\cn.miaoscraft.Hitokoto
+SET DevDir=F:\CoolQ Air\dev\cn.miaoscraft.Hitokoto
 
 echo Setting proxy
 SET GOPROXY=https://goproxy.cn

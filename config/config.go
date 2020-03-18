@@ -8,13 +8,13 @@ import (
 )
 
 type source struct {
-	name       string
-	sourceType string
-	source     string
+	Name       string `json:"Name"`
+	SourceType string `json:"SourceType"`
+	Source     string `json:"Source"`
 }
 
 type config struct {
-	sources []source
+	Sources []source `json:"Sources"`
 }
 
 var conf config
@@ -29,8 +29,8 @@ func Load(path string) error {
 	if err != nil {
 		return err
 	}
-	for _, v := range conf.sources {
-		if err := data.AddSource(v.name, v.sourceType, v.source); err == nil {
+	for _, v := range conf.Sources {
+		if err := data.AddSource(v.Name, v.SourceType, v.Source); err == nil {
 			return err
 		}
 	}
