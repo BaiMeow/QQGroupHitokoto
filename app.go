@@ -37,7 +37,6 @@ func onGroupMsg(subType, msgID int32, fromGroup, fromQQ int64, fromAnonymous, me
 	//判断是否接收处理
 	msg := []rune(message)
 	if len(msg) < 2 || string(msg[:2]) != "一言" {
-		cq.Info(len(msg), msg[:2])
 		return 0
 	}
 	//普通一言
