@@ -1,9 +1,12 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"path/filepath"
 
 	"github.com/MscBaiMeow/QQGroupHitokoto/config"
+	"github.com/MscBaiMeow/QQGroupHitokoto/cq"
 	"github.com/MscBaiMeow/QQGroupHitokoto/data"
 	"github.com/MscBaiMeow/QQGroupHitokoto/users"
 	"github.com/Tnze/CoolQ-Golang-SDK/cqp"
@@ -25,20 +28,43 @@ func init() {
 func onEnable() int32 {
 	err := config.Load(filepath.Join(cqp.GetAppDir(), "conf.json"))
 	if err != nil {
-		cqp.AddLog(cqp.Error, "一言", err.Error())
+		cq.Error(err)
 	}
 	return 0
 }
 
-func onGroupMsg(subType, msgID int32, fromGroup, fromQQ int64, fromAnonymous, msg string, font int32) int32 {
-	if msg != "一言" {
+func onGroupMsg(subType, msgID int32, fromGroup, fromQQ int64, fromAnonymous, message string, font int32) int32 {
+	//判断是否接收处理
+	msg := []rune(message)
+	if len(msg) < 2 || string(msg[:2]) != "一言" {
+		cq.Info(len(msg), msg[:2])
 		return 0
 	}
-	kind := users.GetType(fromGroup)
-	hitokoto, err := data.GetHitokoto(kind)
-	if err != nil {
-		cqp.AddLog(cqp.Error, "一言", err.Error())
+	//普通一言
+	if len(msg) == 2 {
+		kind := users.GetType(fromGroup)
+		hitokoto, err := data.GetHitokoto(kind)
+		if err != nil {
+			cq.Error(err)
+		}
+		cqp.SendGroupMsg(fromGroup, hitokoto)
+		return 1
 	}
-	cqp.SendGroupMsg(fromGroup, hitokoto)
+	//设置一言类型
+	if len(msg) > 3 {
+		var kind string
+		fmt.Sscanf(message, "一言 %s", &kind)
+		err := users.SetType(fromGroup, kind)
+		//错误处理
+		if err != nil {
+			if errors.Is(err, users.ErrUnkownHitokoto) {
+				cqp.SendGroupMsg(fromGroup, "无效一言类型")
+				return 1
+			}
+			cq.Error(err)
+		}
+		cqp.SendGroupMsg(fromGroup, "成功设置一言类型为"+kind)
+		return 1
+	}
 	return 0
 }

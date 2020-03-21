@@ -2,8 +2,10 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 
+	"github.com/MscBaiMeow/QQGroupHitokoto/cq"
 	"github.com/MscBaiMeow/QQGroupHitokoto/data"
 )
 
@@ -29,10 +31,14 @@ func Load(path string) error {
 	if err != nil {
 		return err
 	}
+	var sum int
 	for _, v := range conf.Sources {
-		if err := data.AddSource(v.Name, v.SourceType, v.Source); err == nil {
+		if err := data.AddSource(v.Name, v.SourceType, v.Source); err != nil {
+			cq.Info(fmt.Sprintf("已添加%d个一言源", sum))
 			return err
 		}
+		sum = sum + 1
 	}
+	cq.Info(fmt.Sprintf("已添加%d个一言源", sum))
 	return nil
 }

@@ -6,16 +6,19 @@ import (
 	"github.com/MscBaiMeow/QQGroupHitokoto/data"
 )
 
+//ErrUnkownHitokoto 无效的一言类型
+var ErrUnkownHitokoto = errors.New("无效一言类型")
+
 //type没得用，不想写Type，那就kind吧
 
 //SetType 设置获取的一言类型
 func SetType(group int64, kind string) error {
-	if kind == "" {
+	if kind == "every" {
 		delete(selectedKind, group)
 		return nil
 	}
 	if !data.ValidateType(kind) {
-		return errors.New("无效一言类型")
+		return ErrUnkownHitokoto
 	}
 	selectedKind[group] = kind
 	return nil
@@ -30,4 +33,4 @@ func GetType(group int64) string {
 	return kind
 }
 
-var selectedKind map[int64]string
+var selectedKind = make(map[int64]string)

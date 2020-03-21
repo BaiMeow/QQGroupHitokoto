@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -26,4 +27,16 @@ func (a *httpSource) getHitokoto() (string, error) {
 
 func (a *httpSource) getName() string {
 	return a.name
+}
+
+func addHTTPSource(name, url string) error {
+	if nameGetSource(name) != nil {
+		return errors.New("Source" + name + "has existed")
+	}
+	var httpSource = httpSource{
+		name: name,
+		url:  url,
+	}
+	sourceList = append(sourceList, &httpSource)
+	return nil
 }
