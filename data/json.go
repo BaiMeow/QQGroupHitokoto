@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"path/filepath"
+
+	"github.com/Tnze/CoolQ-Golang-SDK/cqp"
 )
 
 type jsonSource struct {
@@ -26,7 +29,7 @@ func (a *jsonSource) getName() string {
 }
 
 func addJSONSource(name, path string) error {
-	file, err := ioutil.ReadFile(path)
+	file, err := ioutil.ReadFile(filepath.Join(cqp.GetAppDir(), path))
 	if err != nil {
 		return err
 	}
