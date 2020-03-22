@@ -15,3 +15,11 @@ func Info(a ...interface{}) {
 func Error(a ...interface{}) {
 	cqp.AddLog(cqp.Error, "错误", fmt.Sprintf("%v", a))
 }
+
+//func (*Writer) Write(p []byte) (int, error) {
+//	cqp.AddLog(cqp.Info, "Log", fmt.Sprintf(string(p)))
+//	return len(p), nil
+//}
+
+//type Writer struct {
+//}

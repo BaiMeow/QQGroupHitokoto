@@ -83,3 +83,13 @@ func IsSourceExist(name string) bool {
 func RandSourceName() string {
 	return sourceList[rand.Intn(len(sourceList))].getName()
 }
+
+//Close check and close database connections
+func Close() {
+	for _, v := range sourceList {
+		switch v := v.(type) {
+		case *sqliteSource:
+			v.db.Close()
+		}
+	}
+}

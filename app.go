@@ -23,6 +23,7 @@ func init() {
 	cqp.AppID = "cn.miaoscraft.Hitokoto" // TODO: 修改为这个插件的ID
 	cqp.GroupMsg = onGroupMsg
 	cqp.Enable = onEnable
+	cqp.Disable = onDisable
 }
 
 func onEnable() int32 {
@@ -30,6 +31,11 @@ func onEnable() int32 {
 	if err != nil {
 		cq.Error(err)
 	}
+	return 0
+}
+
+func onDisable() int32 {
+	data.Close()
 	return 0
 }
 
@@ -50,7 +56,7 @@ func onGroupMsg(subType, msgID int32, fromGroup, fromQQ int64, fromAnonymous, me
 		return 1
 	}
 	//设置一言类型
-	if len(msg) > 3 {
+	if string(msg[:3]) == "一言 " {
 		var kind string
 		fmt.Sscanf(message, "一言 %s", &kind)
 		err := users.SetType(fromGroup, kind)

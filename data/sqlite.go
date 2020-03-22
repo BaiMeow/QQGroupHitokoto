@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 
 	"github.com/Tnze/CoolQ-Golang-SDK/cqp"
-	"github.com/go-xorm/xorm"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 type sqliteSource struct {
-	name   string
-	engine *xorm.Engine
+	name string
+	db   *gorm.DB
 }
 
 func (a *sqliteSource) getName() string {
@@ -20,11 +20,12 @@ func (a *sqliteSource) getName() string {
 }
 
 func (a *sqliteSource) getHitokoto() (string, error) {
-	values := hitokoto{}
-	has, err := a.engine.OrderBy("random()").Get(&values)
-	if !has || err != nil {
+	var values hitokoto
+	err := a.db.Order("random()").First(&values).Error
+	if err != nil {
 		return "", err
 	}
+
 	return fmt.Sprintf("「%s」 - %s", values.Hitokoto, values.From), nil
 }
 
@@ -32,14 +33,15 @@ func addSQLITESource(name, path string) error {
 	if nameGetSource(name) != nil {
 		return errors.New("Source " + name + " has existed")
 	}
-	engine, err := xorm.NewEngine("sqlite3", filepath.Join(cqp.GetAppDir(), path))
+	db, err := gorm.Open("sqlite3", filepath.Join(cqp.GetAppDir(), path))
+	db.SingularTable(true)
 	if err != nil {
 		return err
 	}
 
 	sourceList = append(sourceList, &sqliteSource{
-		name:   name,
-		engine: engine,
+		name: name,
+		db:   db,
 	})
 	return nil
 }
