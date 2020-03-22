@@ -29,6 +29,9 @@ func (a *jsonSource) getName() string {
 }
 
 func addJSONSource(name, path string) error {
+	if nameGetSource(name) != nil {
+		return errors.New("Source " + name + " has existed")
+	}
 	file, err := ioutil.ReadFile(filepath.Join(cqp.GetAppDir(), path))
 	if err != nil {
 		return err
@@ -38,10 +41,10 @@ func addJSONSource(name, path string) error {
 	if err != nil {
 		return err
 	}
-	var jsonSource = jsonSource{
+
+	sourceList = append(sourceList, &jsonSource{
 		name: name,
 		body: body,
-	}
-	sourceList = append(sourceList, &jsonSource)
+	})
 	return nil
 }

@@ -31,12 +31,11 @@ func (a *httpSource) getName() string {
 
 func addHTTPSource(name, url string) error {
 	if nameGetSource(name) != nil {
-		return errors.New("Source" + name + "has existed")
+		return errors.New("Source " + name + " has existed")
 	}
-	var httpSource = httpSource{
+	sourceList = append(sourceList, &httpSource{
 		name: name,
 		url:  url,
-	}
-	sourceList = append(sourceList, &httpSource)
+	})
 	return nil
 }

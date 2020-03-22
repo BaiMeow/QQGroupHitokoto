@@ -42,6 +42,9 @@ func AddSource(name, sourceType, source string) error {
 			return err
 		}
 	case "SQLITE":
+		if err := addSQLITESource(name, source); err != nil {
+			return err
+		}
 	default:
 		return errors.New("No such sourceType")
 	}
