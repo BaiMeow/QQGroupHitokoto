@@ -14,7 +14,7 @@ import (
 
 //go:generate cqcfg -c .
 // cqp: 名称: 一言Hitokoto
-// cqp: 版本: 1.0.0:0
+// cqp: 版本: 1.0.0:1
 // cqp: 作者: BaiMeow
 // cqp: 简介: 一言
 func main() { /*此处应当留空*/ }
